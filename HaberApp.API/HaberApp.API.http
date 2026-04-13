@@ -1,0 +1,6 @@
+@HaberApp.API_HostAddress = http://localhost:5276
+
+GET {{HaberApp.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
