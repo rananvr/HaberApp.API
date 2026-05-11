@@ -1,6 +1,58 @@
-@HaberApp.API_HostAddress = http://localhost:5276
+@HaberApp.API_HostAddress = http://localhost:7267
 
-GET {{HaberApp.API_HostAddress}}/weatherforecast/
+### 0. Sisteme Kayıt Ol (Önce Bunu Çalıştır)
+POST {{HaberApp.API_HostAddress}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Rana",
+  "email": "rana@test.com",
+  "password": "Password123*"
+}
+
+### 1. Giriş Yap (Kayıt Olduktan Sonra Bunu Çalıştır)
+POST {{HaberApp.API_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "rana@test.com",
+  "password": "Password123*"
+}
+### 1. Giriş Yap ve Token Al (Bu çok önemli!)
+# Buradaki email ve password senin User tablonndaki verilerle aynı olmalı
+POST {{HaberApp.API_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "rana@test.com",
+  "password": "Password123*"
+}
+
+### 2. Kategori Ekle
+# Önce yukarıdan gelen Token'ı buraya yapıştır
+POST {{HaberApp.API_HostAddress}}/api/Category
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJyYW5hQHRlc3QuY29tIiwicm9sZSI6IlVzZXIiLCJuYmYiOjE3NzYwODA1OTksImV4cCI6MTc3NjY4NTM5OSwiaWF0IjoxNzc2MDgwNTk5LCJpc3MiOiJIYWJlckFwcEFQSSIsImF1ZCI6IkhhYmVyQXBwRmx1dHRlciJ9.o4OhYRqumXuA4w7OzadVJkTSg0r8f8ITOFTq_rN2kRwvc7w7C_bxfRIZsjoEgbssvNlMmJFKWMnJ9h4E1NXwTQ
+
+{
+  "name": "Teknoloji",
+  "iconUrl": "tech_icon.png"
+}
+
+### 3. Haber Ekle
+# categoryId kısmına az önce eklediğin kategorinin ID'sini (genelde 1 olur) yaz
+POST {{HaberApp.API_HostAddress}}/api/News
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJyYW5hQHRlc3QuY29tIiwicm9sZSI6IlVzZXIiLCJuYmYiOjE3NzYwODA1OTksImV4cCI6MTc3NjY4NTM5OSwiaWF0IjoxNzc2MDgwNTk5LCJpc3MiOiJIYWJlckFwcEFQSSIsImF1ZCI6IkhhYmVyQXBwRmx1dHRlciJ9.o4OhYRqumXuA4w7OzadVJkTSg0r8f8ITOFTq_rN2kRwvc7w7C_bxfRIZsjoEgbssvNlMmJFKWMnJ9h4E1NXwTQ
+
+{
+  "categoryId": 1,
+  "title": "Flutter ile İlk Haberim",
+  "content": "Bu haber API üzerinden başarıyla eklendi!",
+  "imageUrl": "haber_resmi.png",
+  "tagIds": []
+}
+
+### 4. Tüm Haberleri Listele (Kilit Gerektirmez)
+GET {{HaberApp.API_HostAddress}}/api/News
 Accept: application/json
-
-###

@@ -2,7 +2,7 @@
 using HaberApp.API.Interfaces;
 using HaberApp.API.Models;
 using Microsoft.EntityFrameworkCore;
-using HaberApp.API.Data; // AppDbContext için
+using HaberApp.API.Data; // AppDbContext
 using HaberApp.API.Models;
 
 namespace HaberApp.API.Services
@@ -10,7 +10,7 @@ namespace HaberApp.API.Services
     public class CommentService : ICommentService
     {
         private readonly IGenericRepository<Comment> _commentRepository;
-        private readonly AppDbContext _context; // Özel sorgu için context ekledik
+        private readonly AppDbContext _context; 
 
         public CommentService(IGenericRepository<Comment> commentRepository, AppDbContext context)
         {
@@ -34,7 +34,6 @@ namespace HaberApp.API.Services
 
         public async Task<IEnumerable<CommentListDto>> GetCommentsByNewsIdAsync(int newsId)
         {
-            // Habere ait onaylı yorumları, kullanıcı adlarıyla birlikte getiriyoruz
             return await _context.Comments
                 .Include(c => c.User)
                 .Where(c => c.NewsId == newsId && c.IsActive)

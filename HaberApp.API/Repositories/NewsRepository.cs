@@ -11,7 +11,6 @@ namespace HaberApp.API.Repositories
         {
         }
 
-        // Haberleri çekerken Category ve Author (Yazar) bilgilerini de içine dahil ediyoruz (Include)
         public async Task<IEnumerable<News>> GetAllNewsWithDetailsAsync()
         {
             return await _context.News

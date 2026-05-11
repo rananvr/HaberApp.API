@@ -9,18 +9,20 @@ namespace HaberApp.API.Services
         private readonly INewsRepository _newsRepository;
         private readonly IGenericRepository<NewsTag> _newsTagRepository;
         private readonly IGenericRepository<Category> _categoryRepository;
+        private readonly IGenericRepository<Tag> _tagRepository; // ← EKLE
 
         public NewsService(
             INewsRepository newsRepository,
             IGenericRepository<NewsTag> newsTagRepository,
-            IGenericRepository<Category> categoryRepository)
+            IGenericRepository<Category> categoryRepository,
+            IGenericRepository<Tag> tagRepository)
         {
             _newsRepository = newsRepository;
             _newsTagRepository = newsTagRepository;
             _categoryRepository = categoryRepository;
+            _tagRepository = tagRepository;
         }
 
-        // 1. Tüm Haberleri Listele
         public async Task<IEnumerable<NewsListDto>> GetAllNewsAsync()
         {
             var newsList = await _newsRepository.GetAllNewsWithDetailsAsync();
@@ -37,7 +39,6 @@ namespace HaberApp.API.Services
             }).ToList();
         }
 
-        // 2. Kategoriye Göre Haberleri Listele (Yeni!)
         public async Task<IEnumerable<NewsListDto>> GetNewsByCategoryIdAsync(int categoryId)
         {
             var newsList = await _newsRepository.GetNewsByCategoryIdWithDetailsAsync(categoryId);
@@ -54,7 +55,6 @@ namespace HaberApp.API.Services
             }).ToList();
         }
 
-        // 3. Tek Bir Haberin Detayını Getir (Yeni!)
         public async Task<NewsDetailDto> GetNewsByIdAsync(int id)
         {
             var news = await _newsRepository.GetNewsByIdWithDetailsAsync(id);
@@ -72,7 +72,6 @@ namespace HaberApp.API.Services
             };
         }
 
-        // 4. Yeni Haber Ekle (Gelişmiş Kontrollü)
         public async Task AddNewsAsync(NewsCreateDto dto, int authorId)
         {
             // Kategori kontrolü
@@ -97,11 +96,15 @@ namespace HaberApp.API.Services
             await _newsRepository.AddAsync(newNews);
             await _newsRepository.SaveChangesAsync();
 
-            // Etiketleri ekle
+            // Etiket ekleme
             if (dto.TagIds != null && dto.TagIds.Any())
             {
                 foreach (var tagId in dto.TagIds)
                 {
+                    var tag = await _tagRepository.GetByIdAsync(tagId);
+                    if (tag == null)
+                        throw new ArgumentException($"Tag ID {tagId} bulunamadı!");
+
                     var newsTag = new NewsTag
                     {
                         NewsId = newNews.Id,

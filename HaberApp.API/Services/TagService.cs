@@ -23,7 +23,6 @@ namespace HaberApp.API.Services
 
         public async Task<IEnumerable<NewsListDto>> GetNewsByTagIdAsync(int tagId)
         {
-            // NewsTags üzerinden o etikete sahip haberleri bulup getiriyoruz
             return await _context.NewsTags
                 .Include(nt => nt.News).ThenInclude(n => n.Category)
                 .Include(nt => nt.News).ThenInclude(n => n.Author)

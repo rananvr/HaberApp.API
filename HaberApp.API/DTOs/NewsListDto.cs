@@ -6,8 +6,8 @@
         public string Title { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public string? ImageUrl { get; set; }
-        public string CategoryName { get; set; } = string.Empty; // Sadece kategori adını göndereceğiz, tüm kategoriyi değil
-        public string AuthorName { get; set; } = string.Empty;   // Yazarın sadece adı
+        public string CategoryName { get; set; } = string.Empty; 
+        public string AuthorName { get; set; } = string.Empty;   
         public DateTime? PublishedAt { get; set; }
     }
 }

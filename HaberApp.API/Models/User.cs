@@ -6,10 +6,10 @@
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public string Role { get; set; } = "User"; // Örn: Admin, Editor, User
+        public string Role { get; set; } = "User"; 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation Properties
+       
         public ICollection<News> News { get; set; } = new List<News>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();

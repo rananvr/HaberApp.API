@@ -5,7 +5,7 @@ using HaberApp.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 
@@ -15,15 +15,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFlutter",
         policy =>
         {
-            policy.AllowAnyOrigin()  // Şimdilik her yerden gelen isteğe izin ver (Test aşaması için)
-                  .AllowAnyMethod()  // GET, POST, PUT her şeye izin ver
-                  .AllowAnyHeader(); // Tüm başlıklara izin ver
+            policy.AllowAnyOrigin()  
+                  .AllowAnyMethod()  
+                  .AllowAnyHeader(); 
         });
 });
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-// Depocularımızı (Repository) sisteme kaydediyoruz
+// Repository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<INewsService, NewsService>();
@@ -32,7 +32,6 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IBookmarkService, BookmarkService>();
 builder.Services.AddScoped<ITagService, TagService>();
 
-// Token üretici servisimizi kaydediyoruz
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // JWT Güvenlik Ayarları
@@ -47,7 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidateLifetime = true // Token'ın süresi dolmuş mu diye kontrol et
+            ValidateLifetime = true 
         };
     });
 
@@ -55,7 +54,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-// Bunu sayfanın en üstündeki using'lere ekle (eğer yoksa)
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -68,8 +66,21 @@ builder.Services.AddSwaggerGen(c =>
         In = ParameterLocation.Header,
         Description = "Sadece Token'ı buraya yapıştırın."
     });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 
-  
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 

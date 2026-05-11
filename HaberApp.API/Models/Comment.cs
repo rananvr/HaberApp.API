@@ -8,7 +8,6 @@
         public int UserId { get; set; }
         public User User { get; set; } = null!;
 
-        // HATALI OLAN YERLER BURASI OLABİLİR:
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }

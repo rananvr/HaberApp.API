@@ -15,16 +15,14 @@ namespace HaberApp.API.Controllers
             _categoryService = categoryService;
         }
 
-        // GET: api/Category
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
             return Ok(categories);
         }
-        // POST: api/Category
         [HttpPost]
-        [Authorize] // Sadece giriş yapmış olanlar (Token'ı olanlar) kategori ekleyebilir
+        [Authorize] // tokenı olan kategori ekleyebilir
         public async Task<IActionResult> AddCategory([FromBody] CategoryCreateDto dto)
         {
             await _categoryService.AddCategoryAsync(dto);

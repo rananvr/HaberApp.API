@@ -17,7 +17,7 @@ namespace HaberApp.API.Controllers
             _commentService = commentService;
         }
 
-        // Yorumları Listele (Herkes görebilir)
+        // Yorumları Listele 
         [HttpGet("news/{newsId}")]
         public async Task<IActionResult> GetComments(int newsId)
         {
