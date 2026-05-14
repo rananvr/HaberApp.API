@@ -2,8 +2,10 @@
 using HaberApp.API.DTOs;
 using HaberApp.API.Interfaces;
 using HaberApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace HaberApp.API.Controllers
 {
@@ -53,6 +55,39 @@ namespace HaberApp.API.Controllers
             var token = _tokenService.CreateToken(user);
 
             return Ok(new { Token = token, Message = "Giriş başarılı!" });
+        }
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto dto)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+                var user = await _context.Users.FindAsync(userId);
+
+                if (user == null)
+                    return NotFound(new { Message = "Kullanıcı bulunamadı." });
+
+                user.FullName = dto.FullName;
+                user.Email = dto.Email;
+
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Message = "Profil başarıyla güncellendi." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        // DTO Sınıfı (Aynı dosyanın altına veya Dto klasörüne)
+        public class UserUpdateDto
+        {
+            public string FullName { get; set; }
+            public string Email { get; set; }
         }
     }
 }

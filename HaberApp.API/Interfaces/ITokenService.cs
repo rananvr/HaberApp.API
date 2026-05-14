@@ -5,5 +5,6 @@ namespace HaberApp.API.Interfaces
     public interface ITokenService
     {
         string CreateToken(User user);
+
     }
 }

@@ -46,5 +46,39 @@ namespace HaberApp.API.Services
                     CreatedAt = c.CreatedAt
                 }).ToListAsync();
         }
+        public async Task UpdateCommentAsync(int commentId, string content, int userId)
+        {
+            // 1. Veritabanından o yorumu buluyoruz
+            var comment = await _context.Comments.FindAsync(commentId);
+
+            if (comment == null)
+                throw new Exception("Yorum bulunamadı.");
+
+            // 2. Güvenlik: Yorumu düzenlemek isteyen kişi, yorumun gerçek sahibi mi?
+            if (comment.UserId != userId)
+                throw new Exception("Bu yorumu düzenleme yetkiniz yok.");
+
+            // 3. İçeriği değiştir ve kaydet
+            comment.Content = content;
+            _context.Comments.Update(comment);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteCommentAsync(int commentId, int userId)
+        {
+            // 1. Veritabanından o yorumu buluyoruz
+            var comment = await _context.Comments.FindAsync(commentId);
+
+            if (comment == null)
+                throw new Exception("Yorum bulunamadı.");
+
+            // 2. Güvenlik: Yorumu silmek isteyen kişi, yorumun gerçek sahibi mi?
+            if (comment.UserId != userId)
+                throw new Exception("Bu yorumu silme yetkiniz yok.");
+
+            // 3. Veritabanından sil ve kaydet
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -35,7 +35,8 @@ namespace HaberApp.API.Services
                 ImageUrl = n.ImageUrl,
                 CategoryName = n.Category.Name,
                 AuthorName = n.Author.FullName,
-                PublishedAt = n.PublishedAt
+                PublishedAt = n.PublishedAt,
+                Content = n.Content 
             }).ToList();
         }
 
@@ -51,7 +52,8 @@ namespace HaberApp.API.Services
                 ImageUrl = n.ImageUrl,
                 CategoryName = n.Category.Name,
                 AuthorName = n.Author.FullName,
-                PublishedAt = n.PublishedAt
+                PublishedAt = n.PublishedAt,
+                Content = n.Content 
             }).ToList();
         }
 
